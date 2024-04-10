@@ -43,6 +43,6 @@ repos:
         name: mypy
         entry: mypy src tests --config-file ./pyproject.toml
         language: python
-        types: [ python ]
+        types: [python]
         require_serial: true
         pass_filenames: false
