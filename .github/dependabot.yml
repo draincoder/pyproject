@@ -1,28 +1,25 @@
 version: 2
 updates:
-  - package-ecosystem: "pip"
-    directory: "/"
+  - package-ecosystem: pip
+    directory: /
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "python"
+      interval: weekly
+    cooldown:
+      default-days: 7
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 14
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "github-actions"
+      interval: weekly
+    cooldown:
+      default-days: 7
 
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: docker
+    directory: /
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "docker"
+      interval: weekly
+    cooldown:
+      default-days: 7
