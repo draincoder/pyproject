@@ -1,0 +1,30 @@
+tests:
+  - changed-files:
+    - any-glob-to-any-file:
+      - tests/**
+
+action:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .github/workflows/**
+
+sources:
+  - changed-files:
+    - any-glob-to-any-file:
+      - src/**
+
+common:
+  - changed-files:
+    - any-glob-to-any-file:
+      - common/**
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - pyproject.toml
+      - uv.lock
+
+lint:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .pre-commit-config.yaml

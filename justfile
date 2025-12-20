@@ -1,3 +1,5 @@
+set dotenv-load := true
+
 # Show help message
 [private]
 @default:
@@ -5,7 +7,7 @@
 
 # Install all depends for developing
 @install:
-    pdm install -G:all
+    uv pip install -e . --group lint --group test
     pre-commit install
 
 # Run tests
@@ -15,3 +17,12 @@
 # Run pre-commit
 @lint:
     pre-commit run --all-files
+
+# Run
+@run:
+    python3 -m pyproject.main
+
+# Rename project
+@rename name:
+    chmod +x ./rename.sh
+    ./rename.sh {{name}}
