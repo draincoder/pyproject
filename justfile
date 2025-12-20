@@ -21,3 +21,8 @@ set dotenv-load := true
 # Run
 @run:
     python3 -m pyproject.main
+
+# Rename project
+@rename name:
+    chmod +x ./rename.sh
+    ./rename.sh {{name}}

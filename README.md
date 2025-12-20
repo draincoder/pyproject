@@ -9,10 +9,21 @@
 
 </div>
 
-## Minimal infrastructure settings for a quick start of a Python project.
+Minimal template for a quick start of a Python project.
 
-## Features
+## Highlights
+- **[Actions](https://github.com/features/actions) workflows** for CI tests and linting
+- **[Dependabot](https://docs.github.com/en/code-security/dependabot)** for automated dependency updates
+- **[Zizmor](https://docs.zizmor.sh/)** for GitHub Actions security checks
+- **[Labeler](https://github.com/actions/labeler)** to auto-apply labels to PRs
+- **[Mypy](https://mypy-lang.org/)** for static typing + **[Ruff](https://docs.astral.sh/ruff/)** for lint/format
+- **[pre-commit](https://pre-commit.com/)** for local hooks before commits
 
-- **CI** configured for tests and linting
-- **Mypy** + **Ruff** standards baked in
-- Clean project bootstrap out of the box
+## Commands
+```
+just rename aboba      # set the project name across the repo
+just install           # install python dependencies via uv
+just lint              # run formatting and lint checks
+just test              # run tests via pytest with coverage
+just run               # run the application
+```
