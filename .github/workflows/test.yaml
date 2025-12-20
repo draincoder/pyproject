@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv pip install -e . --group test
+          uv pip install -e . --group test --system
 
       - name: Run tests
         run: |

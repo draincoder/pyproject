@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv pip install -e . --group lint --group test
+          uv pip install -e . --group lint --group test --system
 
       - name: Execute pre-commit
         run: |
