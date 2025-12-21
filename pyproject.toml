@@ -6,7 +6,6 @@ build-backend = "uv_build"
 name = "pyproject"
 version = "0.1.0"
 description = "Minimal infrastructure settings for a quick start of a python project."
-readme = "README.md"
 authors = [
     {name = "treaditup", email = "treaditup@gmail.com"},
 ]
