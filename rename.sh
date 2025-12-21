@@ -9,7 +9,6 @@ fi
 PROJECT_NAME="$1"
 KEYWORD="pyproject"
 
-# Переименование директории
 if [ -d "src/$KEYWORD" ]; then
   mv "src/$KEYWORD" "src/$PROJECT_NAME"
 fi

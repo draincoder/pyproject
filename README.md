@@ -20,23 +20,24 @@ Minimal template for a quick start of a Python project.
 - **[pre-commit](https://pre-commit.com/)** for local hooks before commits
 - **docker-compose** out of the box
 - **[structlog](https://www.structlog.org/)** logger included by default
+- **[AGENTS.md](https://agents.md )** for blazingly fast development
 
 
 ## Commands
 
 ```
-  just rename aboba      # set the project name across the repo
-  just install           # install python dependencies via uv
-  just lint              # run formatting and lint checks
-  just test              # run tests via pytest with coverage
-  just run               # run the application
-  just up                # run the application via docker compose
-  just down              # stop the application via docker compose
+just rename aboba      # set the project name across the repo
+just install           # install python dependencies via uv
+just lint              # run formatting and lint checks
+just test              # run tests via pytest with coverage
+just run               # run the application
+just up                # run the application via docker compose
+just down              # stop the application via docker compose
 ```
 
 ## Configuring
 
 ```sh
-  cp config/template.config.yaml config/config.yaml
-  cp config/template.env config/.env
+cp config/template.config.yaml config/config.yaml
+cp config/template.env config/.env
 ```
