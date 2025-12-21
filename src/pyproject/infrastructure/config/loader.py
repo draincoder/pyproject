@@ -15,4 +15,4 @@ def load_config[T](config_type: type[T], path: str | Path | None = None) -> T:
         data = yaml.safe_load(f)
 
     retort = Retort(strict_coercion=False)
-    return retort.load(data, config_type)  # type: ignore[no-any-return]
+    return retort.load(data, config_type)

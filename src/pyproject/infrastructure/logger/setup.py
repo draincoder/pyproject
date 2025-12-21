@@ -116,7 +116,7 @@ def _additional_serialize(_logger: WrappedLogger, _name: str, event_dict: EventD
 
 def _serialize_to_json(data: Any, **kwargs: Any) -> str:
     default = kwargs.get("default")
-    return orjson.dumps(data, default=default).decode("utf-8")  # type: ignore[no-any-return]
+    return orjson.dumps(data, default=default).decode("utf-8")
 
 
 def _get_render_processor(*, json: bool, colors: bool) -> JSONRenderer | ConsoleRenderer:
