@@ -18,12 +18,25 @@ Minimal template for a quick start of a Python project.
 - **[Labeler](https://github.com/actions/labeler)** to auto-apply labels to PRs
 - **[Mypy](https://mypy-lang.org/)** for static typing + **[Ruff](https://docs.astral.sh/ruff/)** for lint/format
 - **[pre-commit](https://pre-commit.com/)** for local hooks before commits
+- **docker-compose** out of the box
+- **[structlog](https://www.structlog.org/)** logger included by default
+
 
 ## Commands
+
 ```
-just rename aboba      # set the project name across the repo
-just install           # install python dependencies via uv
-just lint              # run formatting and lint checks
-just test              # run tests via pytest with coverage
-just run               # run the application
+  just rename aboba      # set the project name across the repo
+  just install           # install python dependencies via uv
+  just lint              # run formatting and lint checks
+  just test              # run tests via pytest with coverage
+  just run               # run the application
+  just up                # run the application via docker compose
+  just down              # stop the application via docker compose
+```
+
+## Configuring
+
+```sh
+  cp config/template.config.yaml config/config.yaml
+  cp config/template.env config/.env
 ```
