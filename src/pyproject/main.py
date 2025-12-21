@@ -1,7 +1,7 @@
 import logging
 
 from pyproject.config import AppConfig
-from pyproject.infrastructure import load_config
+from pyproject.infrastructure.config import load_config
 from pyproject.infrastructure.logger import setup_logger
 
 logger = logging.getLogger(__name__)

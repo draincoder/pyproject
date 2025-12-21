@@ -2,6 +2,7 @@ import logging
 import sys
 import uuid
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 from typing import Any
 
 import orjson
@@ -23,8 +24,8 @@ def _setup_structlog(config: LoggerConfig) -> None:
         *_build_default_processors(config),
         structlog.processors.StackInfoRenderer(),
         structlog.stdlib.PositionalArgumentsFormatter(),
-        structlog.processors.UnicodeDecoder(),  # convert bytes to str
-        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,  # for integration with default logging
+        structlog.processors.UnicodeDecoder(),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
     ]
 
     structlog.configure_once(
@@ -36,57 +37,58 @@ def _setup_structlog(config: LoggerConfig) -> None:
 
 
 def _setup_logging(config: LoggerConfig) -> None:
-    renderer_processor = JSONRenderer(_serialize_to_json) if config.json else ConsoleRenderer()
     default_processors = _build_default_processors(config)
-
-    logging_processors = [
+    stream_processors = [
         structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-        renderer_processor,
+        _get_render_processor(json=config.json, colors=True),
     ]
-
-    formatter = structlog.stdlib.ProcessorFormatter(
+    stream_formatter = structlog.stdlib.ProcessorFormatter(
         foreign_pre_chain=default_processors,
-        processors=logging_processors,
+        processors=stream_processors,
     )
 
-    handler = logging.StreamHandler(stream=sys.stdout)
-    handler.set_name("default")
-    handler.setLevel(config.level)
-    handler.setFormatter(formatter)
-    handlers: list[logging.Handler] = [handler]
+    stream_handler = logging.StreamHandler(stream=sys.stdout)
+    stream_handler.set_name("default")
+    stream_handler.setLevel(config.level)
+    stream_handler.setFormatter(stream_formatter)
+    handlers: list[logging.Handler] = [stream_handler]
 
-    if config.file:
+    if config.file.enabled:
+        Path(config.file.path).expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
+
+        file_processors = [
+            structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+            _get_render_processor(json=config.json, colors=False),
+        ]
+        file_formatter = structlog.stdlib.ProcessorFormatter(
+            foreign_pre_chain=default_processors,
+            processors=file_processors,
+        )
         file_handler = RotatingFileHandler(
             filename=config.file.path,
             maxBytes=config.file.max_size_bytes,
             backupCount=config.file.backup_count,
             encoding="utf-8",
         )
+
         file_handler.set_name("file")
         file_handler.setLevel(config.level)
-        file_handler.setFormatter(formatter)
+        file_handler.setFormatter(file_formatter)
         handlers.append(file_handler)
 
-    logging.basicConfig(handlers=handlers, level=config.level)
-
-
-def additional_serialize(_logger: WrappedLogger, _name: str, event_dict: EventDict) -> EventDict:
-    for key, value in event_dict.items():
-        if isinstance(value, uuid.UUID):
-            event_dict[key] = str(value)
-
-    return event_dict
+    logging.basicConfig(handlers=handlers, level=config.level, force=True)
 
 
 def _build_default_processors(config: LoggerConfig) -> list[Any]:
-    pr = [
+    processors: list[Any] = [
         structlog.stdlib.add_log_level,
         structlog.stdlib.add_logger_name,
         structlog.contextvars.merge_contextvars,
         structlog.stdlib.ExtraAdder(),
-        additional_serialize,
+        _additional_serialize,
         structlog.dev.set_exc_info,
-        structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S.%f", utc=True),
+        structlog.processors.EventRenamer("msg"),
+        structlog.processors.TimeStamper(fmt="iso", utc=True),
         structlog.processors.dict_tracebacks,
         structlog.processors.CallsiteParameterAdder(
             {
@@ -101,11 +103,21 @@ def _build_default_processors(config: LoggerConfig) -> list[Any]:
             },
         ),
     ]
+
     if config.json:
-        pr.insert(0, structlog.processors.format_exc_info)
+        processors.insert(0, structlog.processors.format_exc_info)
 
-    return pr
+    return processors
 
 
-def _serialize_to_json(data: Any, default: Any) -> str:
+def _additional_serialize(_logger: WrappedLogger, _name: str, event_dict: EventDict) -> EventDict:
+    return {k: (str(v) if isinstance(v, uuid.UUID) else v) for k, v in event_dict.items()}
+
+
+def _serialize_to_json(data: Any, **kwargs: Any) -> str:
+    default = kwargs.get("default")
     return orjson.dumps(data, default=default).decode("utf-8")  # type: ignore[no-any-return]
+
+
+def _get_render_processor(*, json: bool, colors: bool) -> JSONRenderer | ConsoleRenderer:
+    return JSONRenderer(_serialize_to_json) if json else ConsoleRenderer(colors=colors)
