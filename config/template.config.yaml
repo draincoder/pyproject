@@ -1,0 +1,8 @@
+logger:
+  level: INFO
+  json: true
+  file:
+    enabled: true
+    path: app.log
+    max_size_mb: 10
+    backup_count: 5

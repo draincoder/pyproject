@@ -22,6 +22,14 @@ set dotenv-load := true
 @run:
     python3 -m pyproject.main
 
+# Up docker compose
+@up:
+    docker compose -f docker/docker-compose.yaml --env-file=./config/.env up -d --build
+
+# Down docker compose
+@down:
+    docker compose -f docker/docker-compose.yaml down
+
 # Rename project
 @rename name:
     chmod +x ./rename.sh

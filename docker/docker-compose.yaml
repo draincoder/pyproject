@@ -1,0 +1,14 @@
+services:
+  pyproject:
+    container_name: pyproject
+    hostname: pyproject
+    restart: unless-stopped
+    command: [ "python3", "-m", "pyproject.main" ]
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    env_file:
+      - "../config/.env"
+    volumes:
+      - "../config/config.yaml:/etc/pyproject/config.yaml"
+      - "../logs:/home/app/logs"

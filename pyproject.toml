@@ -11,7 +11,12 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "adaptix>=3.0.0b11",
+    "orjson>=3.11.5",
+    "pyyaml>=6.0.3",
+    "structlog>=25.5.0",
+]
 
 [project.urls]
 "Source" = "https://github.com/draincoder/pyproject"
@@ -22,6 +27,7 @@ lint = [
     "ruff>=0.14.10",
     "mypy>=1.19.1",
     "pre-commit>=4.5.1",
+    "types-pyyaml>=6.0.12.20250915",
 ]
 test = [
     "pytest>=9.0.1",
@@ -42,6 +48,7 @@ lint.select = [
 lint.ignore = [
     "ANN401",  # allow any-type
     "D",       # ignore docstring requirements
+    "PTH123"   # allow use open()
 ]
 
 [tool.ruff.lint.per-file-ignores]
