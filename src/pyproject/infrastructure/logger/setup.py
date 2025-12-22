@@ -89,7 +89,6 @@ def _build_default_processors(config: LoggerConfig) -> list[Any]:
         structlog.dev.set_exc_info,
         structlog.processors.EventRenamer("msg"),
         structlog.processors.TimeStamper(fmt="iso", utc=True),
-        structlog.processors.dict_tracebacks,
         structlog.processors.CallsiteParameterAdder(
             {
                 structlog.processors.CallsiteParameter.PATHNAME,
@@ -105,6 +104,8 @@ def _build_default_processors(config: LoggerConfig) -> list[Any]:
     ]
 
     if config.json:
+        processors.append(structlog.processors.dict_tracebacks)
+    else:
         processors.insert(0, structlog.processors.format_exc_info)
 
     return processors
