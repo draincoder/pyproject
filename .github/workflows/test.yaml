@@ -41,7 +41,7 @@ jobs:
           uv run pytest tests --cov=pyproject --junitxml=junitxml.xml --cov-report "xml:coverage.xml"; exit ${PIPESTATUS[0]}
 
       - name: Test coverage comment
-        uses: MishaKav/pytest-coverage-comment@ae0e8a539a3f310aefb3bfb6a2209778a21fa42b # v1.2.0
+        uses: MishaKav/pytest-coverage-comment@287292879eaaff04116f36d3eb1a670f6e5df1a4 # v1.7.1
         with:
           pytest-xml-coverage-path: ./coverage.xml
           junitxml-path: ./junitxml.xml
