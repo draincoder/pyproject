@@ -7,7 +7,6 @@ from typing import Any
 
 import orjson
 import structlog
-from structlog.dev import ConsoleRenderer
 from structlog.processors import JSONRenderer
 from structlog.typing import EventDict, WrappedLogger
 
@@ -15,13 +14,13 @@ from .config import LoggerConfig
 
 
 def setup_logger(config: LoggerConfig) -> None:
-    _setup_structlog(config)
+    _setup_structlog()
     _setup_logging(config)
 
 
-def _setup_structlog(config: LoggerConfig) -> None:
+def _setup_structlog() -> None:
     processors = [
-        *_build_default_processors(config),
+        *_build_default_processors(),
         structlog.processors.StackInfoRenderer(),
         structlog.stdlib.PositionalArgumentsFormatter(),
         structlog.processors.UnicodeDecoder(),
@@ -37,14 +36,10 @@ def _setup_structlog(config: LoggerConfig) -> None:
 
 
 def _setup_logging(config: LoggerConfig) -> None:
-    default_processors = _build_default_processors(config)
-    stream_processors = [
-        structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-        _get_render_processor(json=config.json, colors=True),
-    ]
+    default_processors = _build_default_processors()
     stream_formatter = structlog.stdlib.ProcessorFormatter(
         foreign_pre_chain=default_processors,
-        processors=stream_processors,
+        processors=_build_render_processors(json=config.json, colors=True),
     )
 
     stream_handler = logging.StreamHandler(stream=sys.stdout)
@@ -56,13 +51,9 @@ def _setup_logging(config: LoggerConfig) -> None:
     if config.file.enabled:
         Path(config.file.path).expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
 
-        file_processors = [
-            structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-            _get_render_processor(json=config.json, colors=False),
-        ]
         file_formatter = structlog.stdlib.ProcessorFormatter(
             foreign_pre_chain=default_processors,
-            processors=file_processors,
+            processors=_build_render_processors(json=config.json, colors=False),
         )
         file_handler = RotatingFileHandler(
             filename=config.file.path,
@@ -79,7 +70,7 @@ def _setup_logging(config: LoggerConfig) -> None:
     logging.basicConfig(handlers=handlers, level=config.level, force=True)
 
 
-def _build_default_processors(config: LoggerConfig) -> list[Any]:
+def _build_default_processors() -> list[Any]:
     processors: list[Any] = [
         structlog.stdlib.add_log_level,
         structlog.stdlib.add_logger_name,
@@ -87,7 +78,7 @@ def _build_default_processors(config: LoggerConfig) -> list[Any]:
         structlog.stdlib.ExtraAdder(),
         _additional_serialize,
         structlog.dev.set_exc_info,
-        structlog.processors.EventRenamer("msg"),
+        structlog.processors.format_exc_info,
         structlog.processors.TimeStamper(fmt="iso", utc=True),
         structlog.processors.CallsiteParameterAdder(
             {
@@ -103,10 +94,17 @@ def _build_default_processors(config: LoggerConfig) -> list[Any]:
         ),
     ]
 
-    if config.json:
-        processors.append(structlog.processors.dict_tracebacks)
+    return processors
+
+
+def _build_render_processors(*, json: bool, colors: bool) -> list[Any]:
+    processors: list[Any] = [structlog.stdlib.ProcessorFormatter.remove_processors_meta]
+
+    if json:
+        processors.append(structlog.processors.EventRenamer("msg"))
+        processors.append(JSONRenderer(_serialize_to_json))
     else:
-        processors.insert(0, structlog.processors.format_exc_info)
+        processors.append(structlog.dev.ConsoleRenderer(colors=colors))
 
     return processors
 
@@ -118,7 +116,3 @@ def _additional_serialize(_logger: WrappedLogger, _name: str, event_dict: EventD
 def _serialize_to_json(data: Any, **kwargs: Any) -> str:
     default = kwargs.get("default")
     return orjson.dumps(data, default=default).decode("utf-8")
-
-
-def _get_render_processor(*, json: bool, colors: bool) -> JSONRenderer | ConsoleRenderer:
-    return JSONRenderer(_serialize_to_json) if json else ConsoleRenderer(colors=colors)
