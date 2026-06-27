@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.13-slim@sha256:baf66684c5fcafbda38a54b227ee30ec41e40af1e4073edee3a7110a417756ba AS base
+FROM docker.io/library/python:3.13-slim@sha256:56ab277ddf459858f94052252565945c34617c841818faf8f34f6896de06cffe AS base
 
 ENV PATH="/venv/bin:$PATH" \
     VIRTUAL_ENV="/venv" \
