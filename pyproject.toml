@@ -10,10 +10,10 @@ authors = [
     {name = "treaditup", email = "treaditup@gmail.com"},
 ]
 classifiers = [
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "adaptix>=3.0.0b12",
     "orjson>=3.11.5",
@@ -40,7 +40,7 @@ test = [
 
 [tool.ruff]
 line-length = 120
-target-version="py313"
+target-version="py314"
 src = ["src"]
 include = ["src/**.py", "tests/**.py"]
 
@@ -51,7 +51,10 @@ lint.select = [
 lint.ignore = [
     "ANN401",  # allow any-type
     "D",       # ignore docstring requirements
-    "PTH123"   # allow use open()
+    "PTH123",  # allow use open()
+    "TC001",   # allow runtime application imports used only for annotations
+    "TC002",   # allow runtime third-party imports used only for annotations
+    "TC003",   # allow runtime standard library imports used only for annotations
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -81,7 +84,7 @@ docstring-code-line-length = 88
 
 [tool.mypy]
 packages = ["src", "tests"]
-python_version = "3.13"
+python_version = "3.14"
 
 strict = true
 pretty = true

@@ -32,7 +32,7 @@ Rules:
 
 ## Tooling & Standards (Mandatory)
 
-- Python **3.13**
+- Python **3.14**
 - Task runner: `just`
 - Formatting & linting: **Ruff**
 - Type checking: **mypy**
