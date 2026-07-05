@@ -15,7 +15,7 @@ classifiers = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "adaptix>=3.0.0b11",
+    "adaptix>=3.0.0b12",
     "orjson>=3.11.5",
     "pyyaml>=6.0.3",
     "structlog>=25.5.0",
