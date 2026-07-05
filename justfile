@@ -33,4 +33,4 @@ set dotenv-load := true
 # Rename project
 @rename name='':
     chmod +x ./rename.sh
-    ./rename.sh {{name}}
+    ./rename.sh '{{name}}'
