@@ -33,7 +33,7 @@ lint = [
     "types-pyyaml>=6.0.12.20260518",
 ]
 test = [
-    "pytest>=9.0.1",
+    "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.0.0",
 ]
