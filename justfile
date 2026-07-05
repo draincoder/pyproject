@@ -31,6 +31,6 @@ set dotenv-load := true
     docker compose -f docker/docker-compose.yaml down
 
 # Rename project
-@rename name:
+@rename name='':
     chmod +x ./rename.sh
     ./rename.sh {{name}}
