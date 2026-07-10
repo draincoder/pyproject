@@ -29,7 +29,7 @@ dependencies = [
 lint = [
     "ruff>=0.14.10",
     "mypy>=1.19.1",
-    "pre-commit>=4.5.1",
+    "pre-commit>=4.6.0",
     "types-pyyaml>=6.0.12.20260518",
 ]
 test = [
